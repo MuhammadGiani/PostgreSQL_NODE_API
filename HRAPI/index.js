@@ -36,8 +36,47 @@ app.get('/country',async(req,res)=>{
     }
 });
 
-//for employees
 app.get('/employee',async(req,res)=>{
+    try{
+        const result = await pool.query('select * from employees');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message});
+    }
+});
+
+//Jobs
+app.get('/job',async(req,res)=>{
+    try{
+        const result = await pool.query('select * from jobs');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message});
+    }
+});
+
+//depts
+app.get('/department',async(req,res)=>{
+    try{
+        const result = await pool.query('select * from departments');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message});
+    }
+});
+
+//locations
+app.get('/location',async(req,res)=>{
+    try{
+        const result = await pool.query('select * from locations');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message});
+    }
+});
+
+//for employees COUNT
+app.get('/totalemp',async(req,res)=>{
     try{
         const result = await pool.query('select count(employee_id) as "Total_Employees" from employees');
         res.json(result.rows);
@@ -45,6 +84,50 @@ app.get('/employee',async(req,res)=>{
         res.status(500).json({Error:err.message})
     }
 });
+
+//total countries
+app.get('/totalcountries',async(req,res)=>{
+    try{
+        const result = await pool.query('select count(country_id) as "Total_countries" from countries');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message})
+    }
+});
+
+//total locations
+app.get('/totalLoc',async(req,res)=>{
+    try{
+        const result = await pool.query('select count(location_id) as "Total_Locations" from locations');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message})
+    }
+});
+
+//total regions
+app.get('/totalReg',async(req,res)=>{
+    try{
+        const result = await pool.query('select count(region_id) as "Total_Regions" from regions');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message})
+    }
+});
+
+//for jobs COUNT
+app.get('/totalJobs',async(req,res)=>{
+    try{
+        const result = await pool.query('select count(job_id) as "Total_Jobs" from jobs');
+        res.json(result.rows);
+    }catch(err){
+        res.status(500).json({Error:err.message})
+    }
+});
+
+
+
+//
 
 const PORT = process.env.PORT || 6005; //if that port dosent show so run on this alternate port
 app.listen(PORT,()=>{
