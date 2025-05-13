@@ -2,8 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
 require('dotenv').config();
-
 const app = express();
+
+//******************* */
+const { Pool } = require('pg');
+const path = require('path'); // Add this line
+
+app.use(express.static(path.join(__dirname, 'public')));
+//******************* */
+
 app.use(cors());
 app.use(express.json());
 
@@ -737,7 +744,95 @@ app.get('/q98', async (req, res) => {
     }
 });
 
+//****************************************************************************************** */
 
+
+// API Endpoints for all 7 tables
+
+// 1. Employees
+app.get('/api/employees', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM employees ORDER BY employee_id');
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching employees:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// 2. Departments
+app.get('/api/departments', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM departments ORDER BY department_id');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 3. Jobs
+app.get('/api/jobs', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM jobs ORDER BY job_id');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 4. Locations
+app.get('/api/locations', async (req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT location_id, street_address, postal_code, city, state_province, country_id 
+      FROM locations
+      ORDER BY location_id
+    `);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 5. Countries
+app.get('/api/countries', async (req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT country_id, country_name, region_id 
+      FROM countries
+      ORDER BY country_id
+    `);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 6. Regions
+app.get('/api/regions', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM regions ORDER BY region_id');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 7. Job History
+app.get('/api/job_history', async (req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT employee_id, start_date, end_date, job_id, department_id 
+      FROM job_history
+      ORDER BY employee_id, start_date
+    `);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//****************************************************************************************** */
 
 // Code End Here
 
