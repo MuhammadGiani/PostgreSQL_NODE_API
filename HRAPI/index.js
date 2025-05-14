@@ -82,6 +82,15 @@ app.get('/location', async (req, res) => {
     }
 });
 
+app.get('/jobhistory', async (req, res) => {
+    try {
+        const result = await pool.query('select * from job_history');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ Error: err.message });
+    }
+});
+
 //for employees COUNT
 app.get('/totalemp', async (req, res) => {
     try {
@@ -836,7 +845,7 @@ app.get('/api/job_history', async (req, res) => {
 
 // Code End Here
 
-const PORT = process.env.PORT || 6005; //if that port dosent show so run on this alternate port
+const PORT = process.env.PORT || 5005; //if that port dosent show so run on this alternate port
 app.listen(PORT, () => {
     console.log(`Connected Successfully...on PORT ${PORT}`) //this is back tick above tab button.
 });
